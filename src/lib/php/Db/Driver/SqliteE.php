@@ -205,8 +205,18 @@ class SqliteE implements Driver
    */
   public function existsColumn($tableName, $columnName)
   {
-    // TODO: Implement existsColumn() method.
-    throw new \Exception("Method not implemented yet!");
+    $sql = "PRAGMA table_info($tableName)";
+    $result = $this->query($sql);
+
+    while ($row = $this->fetchArray($result)) {
+      if ($row['name'] === $columnName) {
+        $this->freeResult($result);
+        return true;
+      }
+    }
+
+    $this->freeResult($result);
+    return false;
   }
 
   /**
